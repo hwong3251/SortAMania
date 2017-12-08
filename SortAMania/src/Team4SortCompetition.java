@@ -4,20 +4,27 @@ import java.util.Random;
 /*
  * Created by Hoi Lam Wong and Leon You
  */
-public class Team4SortCompetition{
+public class Team4SortCompetition extends SortCompetition{
 	public String greeting() {
-		return null;
+		return "hi";
 	}
 	public static void main(String[]args)
 	{
 		long startTime, endTime, totalTime;
 		
+		/**********************************************************************************************
 		//test1
 		int[] test1 = new int[10000];
 		for (int i = 0; i < test1.length; i++)
 		{
 			test1[i] = (int) Math.floor(Math.random()*10001);
 		}
+		startTime = System.nanoTime();
+		System.out.println(challengeOne(test1));
+		endTime = System.nanoTime();
+		totalTime = endTime - startTime;
+		System.out.println("1) Time Take in nanoseconds: " + totalTime);
+		
 		//test2
 		String[] test2 = new String[10000];
 		for (int i = 0; i < test2.length;i++) 
@@ -31,6 +38,11 @@ public class Team4SortCompetition{
 			}
 			test2[i] = s;
 		}
+		startTime = System.nanoTime();
+		System.out.println(challengeTwo(test2,"oihdw"));
+		endTime = System.nanoTime();
+		totalTime = endTime - startTime;
+		System.out.println("2) Time Take in nanoseconds: " + totalTime);
 		
 		//test3
 		int[] test3 = new int[10000];
@@ -38,50 +50,37 @@ public class Team4SortCompetition{
 		{
 			test3[i] = (int) Math.floor(Math.random()*10001);
 		}
-		
-		//test4
-		int[][]test4 = new int[10][10];
-		for(int i = 0; i < test4.length; i++)
-		{
-			for(int j = 0; j< test4[i].length; j++)
-			{
-				test4[i][j] = (int) Math.floor(Math.random()*10001);
-				System.out.print(test4[i][j]+" ");
-			}
-			System.out.println();
-		}
-		startTime = System.nanoTime();
-		System.out.println(challengeOne(test1));
-		endTime = System.nanoTime();
-		totalTime = endTime - startTime;
-		System.out.println("1) Time Take in nanoseconds: " + totalTime);
-		
-		startTime = System.nanoTime();
-		System.out.println(challengeTwo(test2,"oihdw"));
-		endTime = System.nanoTime();
-		totalTime = endTime - startTime;
-		System.out.println("2) Time Take in nanoseconds: " + totalTime);
-		
-		
 		startTime = System.nanoTime();
 		System.out.println(challengeThree(test3));
 		endTime = System.nanoTime();
 		totalTime = endTime - startTime;
 		System.out.println("3) Time Take in nanoseconds: " + totalTime);
 		
+		//test4
+		int[][]test4 = new int[3][3];
+		for(int i = 0; i < test4.length; i++)
+		{
+			for(int j = 0; j< test4[i].length; j++)
+			{
+				test4[i][j] = (int) Math.floor(Math.random()*11);
+				System.out.print(test4[i][j]+" ");
+			}
+			System.out.println();
+		}
 		startTime = System.nanoTime();
 		System.out.println(challengeFour(test4));
 		endTime = System.nanoTime();
 		totalTime = endTime - startTime;
 		System.out.println("4) Time Take in nanoseconds: " + totalTime);
+		****************************************************************************/
 
 	}
-	public static int challengeOne(int[]arr)
+	public int challengeOne(int[]arr)
 	{
-		insertionSort(arr);
+		quickSort(arr,0,arr.length-1);
 		return getMedian(arr);
 	}
-	public static int challengeTwo(String[]arr, String query)
+	public int challengeTwo(String[]arr, String query)
 	{
 		arr = mergeSort(arr);
 		for(int i = 0; i < arr.length; i++)
@@ -92,47 +91,42 @@ public class Team4SortCompetition{
 		return -1;
 	}
 	//Mostly Sorted
-	public static int challengeThree(int[]arr)
+	public int challengeThree(int[]arr)
 	{
-		bubbleSort(arr);
+		bubbleSort(arr); //bubble sort should be faster when the array is mostly sorted
 		return getMedian(arr);
 	}
-	public static int challengeFour(int[][] arr)
+	//Multidimensional Array
+	public int challengeFour(int[][] arr)
 	{
 		int[]nArr = new int[arr.length];
 		int median = 0;
 		for(int i = 0; i < arr.length; i++)
 		{
-			//merge array
-			mergeSort(arr[i]);
+			quickSort(arr[i],0,arr[i].length-1);
 			nArr[i] = getMedian(arr[i]);
 		}
-		//bubble sort
-			boolean swap = true;
-			while(swap)
-			{
-				int count = 0;
-				for(int i = 0; i < nArr.length-1; i++)
-				{
-					if(nArr[i]>nArr[i+1])
-					{
-						int[]n = arr[i];
-						arr[i] = arr[i+1];
-						arr[i+1] = n;
-						count++;
-					}
-				}
-				if(count == 0)
-				{
-					swap = false;
-				}
-			}
+		quickSort(nArr,0,nArr.length-1);
 		median = getMedian(nArr);
 		return median;
+		
 	}
-	public int challengeFive(Object[] arr, Object query)
+	public int challengeFive(Comparable[] arr, Comparable query)
 	{
-		return 0;
+		String n = query.toString();
+		for(int i = 0; i < arr.length; i++)
+		{
+			arr[i].toString();
+		}
+		mergeSort((String[]) arr);
+		for(int i = 0; i < arr.length; i ++)
+		{
+			if(n == arr[i])
+			{
+				return i;
+			}
+		}
+		return -1;
 	}
 	
 /******************************************************************************************************************************************/
@@ -263,26 +257,50 @@ public class Team4SortCompetition{
 				return merge(a1, a2);
 			}
 		}
-		//partition
-		public static int partition(int[]list,int front, int back)
+		//partition + quicksort
+		public static int partition(int[] list, int front, int back)
 		{
-			int p = list[front];
-			int l = front + 1;
-			int r = back;
-			while(l<r)
-			{
-				while(l<back&& list[l] < p)
+		    int pivot = list[front];
+		    int low = front + 1;
+		    int high = back;
+		    while (high > low) 
+		    {
+		    	while (low <= high && list[low] <= pivot)
+		    	{
+			    	low++;
+		    	}
+				while (low <= high && list[high] > pivot)
 				{
-					l++;
+			        high--;
 				}
-				while(r>front&& list[r] >= p)
+				if (high > low)
 				{
-					r--;
+					int temp = list[high];
+					list[high] = list[low];
+					list[low] = temp;
 				}
+		    }
+		    while (high > front && list[high] >= pivot)
+		    {
+		    	high--;
 			}
-			list[front] = list[r];
-			list[r] = p;
-			return p;
+		    if (pivot > list[high]) 
+		    {
+		    	list[front] = list[high];
+		        list[high] = pivot;
+		        return high;
+		    }
+		    return front;
+	    }
+		public static void quickSort(int[]list1, int front, int back)
+		{
+			 if (front < back)
+		     {
+		           
+		         int pi = partition(list1, front, back);
+		         quickSort(list1, front, pi-1);
+		         quickSort(list1, pi+1, back);
+		     }
 		}
 		//insertion
 		public static void insertionSort(int[]list1)
@@ -388,4 +406,5 @@ public class Team4SortCompetition{
 			
 			return median;
 		}
+
 }
