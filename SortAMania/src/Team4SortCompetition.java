@@ -113,15 +113,10 @@ public class Team4SortCompetition extends SortCompetition{
 	}
 	public int challengeFive(Comparable[] arr, Comparable query)
 	{
-		String n = query.toString();
-		for(int i = 0; i < arr.length; i++)
+		bubbleSort(arr);
+		for(int i=0;i<arr.length;i++)
 		{
-			arr[i].toString();
-		}
-		mergeSort((String[]) arr);
-		for(int i = 0; i < arr.length; i ++)
-		{
-			if(n == arr[i])
+			if(arr[i].compareTo(query)==0)
 			{
 				return i;
 			}
@@ -292,6 +287,30 @@ public class Team4SortCompetition extends SortCompetition{
 		    }
 		    return front;
 	    }
+		public void bubbleSort(Comparable[] list1)
+		{
+			boolean swap = false;
+			while(!swap)
+			{
+				int numSwaps = 0;
+				for(int i = 0; i < list1.length-1; i++)
+				{
+					Comparable value;
+					if(list1[i].compareTo(list1[i+1]) > 0)
+					{
+						value = list1[i+1];
+						list1[i+1] = list1[i];
+						list1[i] = value;
+						numSwaps++;
+					}		
+				}
+				if(numSwaps == 0) 
+				{
+					swap = true;
+				}
+				
+			}
+		}
 		public static void quickSort(int[]list1, int front, int back)
 		{
 			 if (front < back)
